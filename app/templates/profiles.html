@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block main %}
+<h1 class="page-header">Lab 5 Starter Code</h1>
+<p class="lead">Use this starter template for Lab 5<br/>
+All you get are these files and mostly barebones HTML/CSS files.</p>
+
+{% for profile in profiles %}
+    <div class="container profile-container">
+    
+        <div class="profile-image">
+            <img class="profile-image" src =" {{url_for( 'static', filename='images/' + profile.image ) }} ">
+        </div>
+        
+        <div class="profile-description">
+            <h1>{{profile.first_name + profile.last_name}}</h1>
+            <strong>Profile created on: </strong> {{ profile.created_on }}<br /> <br />
+            <strong>Username: </strong> <br /> 
+            <strong>User Id: </strong> {{ profile.id }}<br />
+            <strong>Gender: </strong> {{ profile.gender }}<br />
+            <strong>Age: </strong> {{ profile.age }}<br /> <br />
+            <p>{{ profile.biography }}</p>
+            
+        </div>
+        
+    </div>
+{% endfor %}
+{% endblock %}
