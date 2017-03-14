@@ -13,9 +13,9 @@ All you get are these files and mostly barebones HTML/CSS files.</p>
         </div>
         
         <div class="profile-description">
-            <h1>{{profile.first_name + profile.last_name}}</h1>
+            <h1>{{profile.first_name +" " + profile.last_name}}</h1>
             <strong>Profile created on: </strong> {{ profile.created_on }}<br /> <br />
-            <strong>Username: </strong> <br /> 
+            <strong>Username: </strong> {{ profile.username }}<br /> 
             <strong>User Id: </strong> {{ profile.id }}<br />
             <strong>Gender: </strong> {{ profile.gender }}<br />
             <strong>Age: </strong> {{ profile.age }}<br /> <br />

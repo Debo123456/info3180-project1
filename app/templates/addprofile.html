@@ -41,20 +41,12 @@
           
           
           <div id="gender" class="form-group">
+            {{ form.gender.label }}<br />
             <span class="required">  *Required</span>
-            <div class="radio">
-              <label>
-                <input type="radio" name="gender" id="male" value="male">
-                Male
-              </label>
-            </div>
-          
-            <div class="radio">
-              <label>
-                <input type="radio" name="gender" id="female" value="female">
-                Female
-              </label>
-            </div>
+            <select id="gender" name="gender" class="form-control">
+              <option>Male</option>
+              <option>Female</option>
+            <select />
           </div>
           
           <div class="form-group-sm">
