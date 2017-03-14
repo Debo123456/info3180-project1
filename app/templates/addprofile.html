@@ -8,20 +8,28 @@
         {% include 'flash_messages.html' %}
         
         <form method='post' action='/profile/' enctype="multipart/form-data" >
+          {{ form.csrf_token }}
             
           <div class="form-group">
-            <label for="name">Firstname</label><span class="required">  *Required</span>
+            {{ form.firstname.label }}<span class="required">  *Required</span>
             <span id="helpBlock" class="help-block">Please enter your firstname.</span>
-            <input type="text" class="form-control" id="firstname" name="firstname" placeholder="Enter your firstname" required>
+            {{ form.firstname(class='form-control', id ='firstname', placeholder="Enter your firstname") }}
           </div>
           
           <div class="form-group">
-            <label for="name">Lastname</label><span class="required">  *Required</span>
-            <span id="helpBlock" class="help-block">Please enter your lastname.</span>
-            <input type="text" class="form-control" id="lastname" name="lastname" placeholder="Enter your lastname" required>
+            {{ form.username.label }}
+            <span id="helpBlock" class="help-block">Please enter your firstname.</span>
+            {{ form.username(class='form-control', id ='username', placeholder="Enter your username") }}
           </div>
           
-          <label for="age">Age</label>
+          <div class="form-group">
+            {{ form.lastname.label }}
+            <span class="required">  *Required</span>
+            <span id="helpBlock" class="help-block">Please enter your lastname.</span>
+            {{ form.lastname(class='form-control', id ='lastname', placeholder="Enter your lastname") }}
+          </div>
+          
+          {{ form.age.label }}
           <select id="age" name="age" class="form-control">
             <option>20</option>
             <option>21</option>
@@ -50,12 +58,13 @@
           </div>
           
           <div class="form-group-sm">
-            <label for="image">Images: </label><br />
+            {{ form.image.label }}<br />
             <input id="image" class="form-control" type="file" name="image" value="" /><br />
           </div><br />
           
           <div class="form-group">
-            <label for="message">Biography</label><span class="required">  *Required</span>
+            {{ form.biography.label }}
+            <span class="required">  *Required</span>
             <span id="helpBlock" class="help-block">Please enter your biography.</span>
             <textarea class="form-control" id="biography" name="biography" rows="4" placeholder="Biography Here" required></textarea>
           </div>

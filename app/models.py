@@ -1,4 +1,8 @@
 from . import db
+from marshmallow import Schema, fields
+
+
+##### MODELS #####
 
 class UserProfile(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -27,9 +31,10 @@ class UserProfile(db.Model):
         
         
 class Profiles(db.Model):
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    id = db.Column(db.Integer, primary_key=True)
     first_name = db.Column(db.String(80))
     last_name = db.Column(db.String(80))
+    username = db.Column(db.String(80))
     age = db.Column(db.String(80))
     gender = db.Column(db.String(80))
     image = db.Column(db.String(80))
@@ -50,4 +55,20 @@ class Profiles(db.Model):
             return unicode(self.id)  # python 2 support
         except NameError:
             return str(self.id)  # python 3 support
+            
+            
+##### SCHEMAS #####
+
+class ProfileSchema(Schema):
+    id = fields.Int(dump_only=True)
+    first_name = fields.Str()
+    last_name = fields.Str()
+    age = fields.Str()
+    image = fields.Str()
+    gender = fields.Str()
+    biography = fields.Str()
+    formatted_name = fields.Method(dump_only=True)
+
+   
+
     

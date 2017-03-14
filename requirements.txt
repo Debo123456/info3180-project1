@@ -4,6 +4,7 @@
 flask
 Flask-WTF
 Flask-SQLAlchemy
+marshmallow-sqlalchemy
 Flask-Migrate
 Flask-Login
 psycopg2

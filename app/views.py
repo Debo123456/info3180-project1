@@ -7,11 +7,10 @@ This file creates your application.
 
 import os
 from app import app, db, login_manager
-from flask import render_template, request, redirect, url_for, flash
+from flask import render_template, request, redirect, url_for, flash, jsonify
 from flask_login import login_user, logout_user, current_user, login_required
-from forms import LoginForm
-from models import UserProfile
-from models import Profiles
+from forms import LoginForm, UploadForm
+from models import UserProfile, Profiles, ProfileSchema
 from werkzeug.utils import secure_filename
 from datetime import datetime
 
@@ -36,14 +35,16 @@ def allowed_file(filename):
     
 @app.route('/profile/', methods=["GET", "POST"])
 def addProfile():
-    if request.method == "POST":
-        firstname = request.form["firstname"]
-        lastname = request.form["lastname"]
-        age = request.form["age"]
-        gender = request.form['gender']
-        biography = request.form["biography"]
+    form = UploadForm()
+    if request.method == "POST" and form.validate_on_submit():
+        firstname = form.firstname.data
+        lastname = form.lastname.data
+        username = form.username.data
+        age = form.age.data
+        gender = form.gender.data
+        biography = form.biography.data
             
-        image = request.files["image"]
+        image = form.image.data
         
         file_folder = app.config['UPLOAD_FOLDER']
         
@@ -53,7 +54,7 @@ def addProfile():
         if image and allowed_file(image.filename):
             filename = secure_filename(image.filename)
             image.save(os.path.join(file_folder, filename))
-            profile = Profiles(first_name = firstname, last_name = lastname, age = age, gender = gender, image = filename, biography = biography, created_on = datetime.now())
+            profile = Profiles(first_name = firstname, last_name = lastname, username = username, age = age, gender = gender, image = filename, biography = biography, created_on = datetime.now())
             db.session.add(profile)
             db.session.commit()
             flash('Upload succesful', 'success')
@@ -63,24 +64,37 @@ def addProfile():
             return redirect(request.url)
     
     """Render the add-profile page."""
-    return render_template('addprofile.html')
+    return render_template('addprofile.html', form = form)
     
-@app.route('/profile/<int:userid>')
+@app.route('/profile/<int:userid>', methods = ['POST', 'GET'])
 def viewProfile(userid):
     profile = Profiles.query.filter_by(id=userid).first()
     
     if profile is not None:
+        if request.method == "POST" and request.headers['Content-Type'] == "application/json":
+            profile_schema = ProfileSchema()
+            result = profile_schema.dump(profile)
+            return jsonify({'Profile': result.data})
         return render_template('profile.html', profile = profile, file_folder = app.config['UPLOAD_FOLDER'])
+        
     flash('Profile not found', 'warning')
     return redirect(url_for('home'))
+  
+  
     
-@app.route('/profiles/')
+@app.route('/profiles/', methods = ['POST', 'GET'])
 def profiles():
     profiles = Profiles.query.all()
     if profiles is not None:
+        if request.method == "POST":
+            profile_schema = ProfileSchema(many = True, only=('username', 'id'))
+            result = profile_schema.dump(profiles)
+            return jsonify(result)
         return render_template('profiles.html', profiles = profiles)
     flash('No profiles found', 'warning')
     return redirect(url_for('home'))
+
+
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
