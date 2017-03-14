@@ -67,7 +67,10 @@ class ProfileSchema(Schema):
     image = fields.Str()
     gender = fields.Str()
     biography = fields.Str()
-    formatted_name = fields.Method(dump_only=True)
+    formatted_name = fields.Method("format_name", dump_only=True)
+    
+    def format_name(self, profile):
+        return "{}, {}".format(profile.lastname, profile.firstname)
 
    
 

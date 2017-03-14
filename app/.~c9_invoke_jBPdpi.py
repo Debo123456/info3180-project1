@@ -70,11 +70,11 @@ def addProfile():
 def viewProfile(userid):
     profile = Profiles.query.filter_by(id=userid).first()
     
-    if profile:
-        if request.method == "POST":
+    if profile is not None:
+        if request.method == "POST" and request.headers['Content-Type'] == "application/json":
             profile_schema = ProfileSchema()
             result = profile_schema.dump(profile)
-            return jsonify( result.data )
+            return jsonify({'Profile': result})
         return render_template('profile.html', profile = profile, file_folder = app.config['UPLOAD_FOLDER'])
         
     flash('Profile not found', 'warning')
@@ -87,9 +87,9 @@ def profiles():
     profiles = Profiles.query.all()
     if profiles is not None:
         if request.method == "POST":
-            profile_schema = ProfileSchema(many = True, only=('username', 'id'))
+            profile_schema = ProfileSchema(many = True, only=('username', ''))
             result = profile_schema.dump(profiles)
-            return jsonify({ "users": result.data})
+            return jsonify(result)
         return render_template('profiles.html', profiles = profiles)
     flash('No profiles found', 'warning')
     return redirect(url_for('home'))
